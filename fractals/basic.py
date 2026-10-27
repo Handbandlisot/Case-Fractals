@@ -1,5 +1,6 @@
 import turtle as t
 
+
 def draw_binary_tree(turtle: t.Turtle, depth: int, size: float, angle: float) -> None:
     """
     Рисует рекурсивное двоичное дерево.
@@ -33,19 +34,29 @@ def draw_branch(turtle: t.Turtle, size, depth):
     :param depth: Глубина рекурсии и количество точек ветвления.
     """
     if depth == 0:
-        turtle.left(180)
         return
 
-    x = size / (depth + 1)
-    for i in range(depth):
-        turtle.forward(x)
-        turtle.left(45)
-        draw_branch(turtle, 0.5 * x * (depth - i - 1), depth - i - 1)
-        turtle.left(90)
-        draw_branch(turtle, 0.5 * x * (depth - i - 1), depth - i - 1)
-        turtle.right(135)
+    segment_size = size / (depth + 1)
 
-    turtle.forward(x)
-    turtle.left(180)
-    turtle.forward(size)
+    for branch_index in range(depth):
+        turtle.forward(segment_size)
+
+        # Левая ветка
+        turtle.left(45)
+        # При вычислении длины учитываем, сколько уровней ветвления осталось
+        draw_branch(turtle, 0.5 * segment_size * (depth - branch_index - 1), depth - branch_index - 1)
+
+        # Переход к правой ветке (возвращаемся на 45 вправо, т.е. на исходную)
+        turtle.right(45)
+
+        # Правая ветка
+        turtle.right(45)
+        draw_branch(turtle, 0.5 * segment_size * (depth - branch_index - 1), depth - branch_index - 1)
+
+        # Возврат на ствол (смотрим прямо вверх)
+        turtle.left(45)
+
+    turtle.forward(segment_size)
+    # Возврат к основанию ствола задним ходом
+    turtle.backward(size)
 
